@@ -86,6 +86,8 @@ public class Count0Task {
                     JSONArray jsonArray = jsonObject.getJSONArray("data");
                     // 在这里将需要执行的命令插入数据库
 
+                    System.out.println("1.命令：" + jsonArray.toJSONString());
+
                     for (int i = 0; i < jsonArray.size(); i++) {
                         HashMap<String, Object> param = new HashMap<String, Object>();
                         param.put("BDC_FSZH", jsonArray.getJSONObject(i).getString("BDC_FSZH"));
