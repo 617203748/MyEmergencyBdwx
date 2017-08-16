@@ -1,6 +1,6 @@
 package com.bdjw.bean;
 
-public class DevMsg {
+public class Dev_msg {
 
     private int msg_id;
     private String sim_no;

@@ -3,5 +3,45 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bdjw.dao.MybatisDao">
 
+    <select id="getDevPostion_changed" parameterType="HashMap"
+            resultType="Dev_position">
+        SELECT
+        *
+        FROM dev_position WHERE is_commit = 0 AND
+        is_change = 1
+    </select>
+
+    <select id="getDevPostion_unchange" parameterType="HashMap"
+            resultType="Dev_position">
+        SELECT * FROM dev_position WHERE is_change = 0
+    </select>
+
+    <update id="changePostion" parameterType="Dev_position">
+        UPDATE dev_position SET
+        is_change = 1,longitude = #{longitude},latitude =#{latitude} WHERE
+        pos_id = #{pos_id}
+    </update>
+
+    <select id="getDevMsg" parameterType="HashMap" resultType="Dev_msg">
+        SELECT * FROM dev_msg WHERE is_commit = 0
+    </select>
+
+    <insert id="makeCommond" parameterType="Bds_bdcommand">
+        INSERT INTO
+        bds_bdcommand
+        (BDC_FSZH,BDC_JSZH,BDC_TXNR,BDC_MLLX,BDC_FSLX,BDC_TXBM,BDC_SFTB,BDC_FSBZ)
+        VALUES
+        (#{BDC_FSZH},#{BDC_JSZH},#{BDC_TXNR},#{BDC_MLLX},#{BDC_FSLX},#{BDC_TXBM},#{BDC_SFTB},#{BDC_FSBZ})
+    </insert>
+
+    <update id="changeStatus_DevPostion" parameterType="Dev_position">
+        UPDATE
+        dev_position SET is_commit = 1 WHERE pos_id = #{pos_id}
+    </update>
+
+    <update id="changeStatus_DevMsg" parameterType="Dev_msg">
+        UPDATE dev_msg
+        SET is_commit = 1 WHERE msg_id = #{msg_id}
+    </update>
 
 </mapper> 

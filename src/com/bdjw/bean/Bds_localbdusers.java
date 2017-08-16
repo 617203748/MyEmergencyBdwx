@@ -1,6 +1,6 @@
 package com.bdjw.bean;
 
-public class BdsLocalbdusers {
+public class Bds_localbdusers {
 
     private int LCU_CARDID;
     private int LCU_CARDFRQ;

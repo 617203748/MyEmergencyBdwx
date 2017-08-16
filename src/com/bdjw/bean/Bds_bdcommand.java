@@ -1,6 +1,6 @@
 package com.bdjw.bean;
 
-public class BdsBdcommand {
+public class Bds_bdcommand {
 
     private int BDC_MLBZ;
     private int BDC_FSZH;

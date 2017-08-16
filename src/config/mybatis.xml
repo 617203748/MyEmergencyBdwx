@@ -3,10 +3,10 @@
 <configuration>
 
     <typeAliases>
-        <typeAlias alias="BdsBdcommand" type="com.bdjw.bean.BdsBdcommand"/>
-        <typeAlias alias="BdsLocalbdusers" type="com.bdjw.bean.BdsLocalbdusers"/>
-        <typeAlias alias="DevMsg" type="com.bdjw.bean.DevMsg"/>
-        <typeAlias alias="DevPosition" type="com.bdjw.bean.DevPosition"/>
+        <typeAlias alias="Bds_bdcommand" type="com.bdjw.bean.Bds_bdcommand"/>
+        <typeAlias alias="Bds_localbdusers" type="com.bdjw.bean.Bds_localbdusers"/>
+        <typeAlias alias="Dev_msg" type="com.bdjw.bean.Dev_msg"/>
+        <typeAlias alias="Dev_position" type="com.bdjw.bean.Dev_position"/>
     </typeAliases>
 
     <mappers>
