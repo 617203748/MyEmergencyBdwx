@@ -4,10 +4,15 @@
 
     <typeAliases>
         <typeAlias alias="T_despire" type="com.bdjw.bean.T_despire"/>
+        <typeAlias alias="BdsBdcommand" type="com.bdjw.bean.BdsBdcommand"/>
+        <typeAlias alias="BdsLocalbdusers" type="com.bdjw.bean.BdsLocalbdusers"/>
+        <typeAlias alias="DevMsg" type="com.bdjw.bean.DevMsg"/>
+        <typeAlias alias="DevPosition" type="com.bdjw.bean.DevPosition"/>
     </typeAliases>
 
     <mappers>
         <mapper resource="com/bdjw/mybatis/t_despire.xml"/>
+        <mapper resource="com/bdjw/mybatis/mybatis.xml"/>
     </mappers>
 
 </configuration>
