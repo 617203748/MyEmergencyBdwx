@@ -64,7 +64,7 @@ public class Count0Task {
                         for (int i = 0; i < jsonArray.size(); i++) {
                             position_unchange.get(i).setLatitude(jsonArray.getJSONObject(i).getString("y"));
                             position_unchange.get(i).setLongitude(jsonArray.getJSONObject(i).getString("x"));
-                            position_unchange.get(i).setIs_change(1);
+                            position_unchange.get(i).setIs_changed(1);
 
                             mybatisService.changePostion(position_unchange.get(i));
                         }
