@@ -33,13 +33,13 @@ public class Count0Task {
     public void taskCycle() {
         System.out.println("使用SpringMVC框架配置定时任务");
 
-        getCommonds();
-
-        changePostion();
-
-        sendPostions();
-
-        sendMsgs();
+//        getCommonds();
+//
+//        changePostion();
+//
+//        sendPostions();
+//
+//        sendMsgs();
     }
 
     public void changePostion() {
