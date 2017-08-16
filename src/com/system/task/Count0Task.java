@@ -7,6 +7,7 @@ import com.bdjw.base.UrlPath;
 import com.bdjw.bean.Dev_msg;
 import com.bdjw.bean.Dev_position;
 import com.bdjw.service.MybatisService;
+import com.bdjw.utils.Util_Date;
 import com.system.http.HttpRequest;
 import com.system.http.IRequestCallBack;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class Count0Task {
     @Scheduled(cron = "10 * * * * *")
     // 间隔5秒执行
     public void taskCycle() {
-        System.out.println("使用SpringMVC框架配置定时任务");
+        System.out.println("当前时间：" + Util_Date.getCurrentDateTime());
 
         getCommonds();
 
@@ -77,7 +78,7 @@ public class Count0Task {
     }
 
     private void getCommonds() {
-        System.out.println("1.getCommonds:" + UrlPath.getBds_bdcommand);
+        System.out.println("    1.getCommonds:" + UrlPath.getBds_bdcommand);
         try {
             HttpRequest.sendPost(UrlPath.getBds_bdcommand, "", new IRequestCallBack() {
                 @Override
@@ -86,7 +87,7 @@ public class Count0Task {
                     JSONArray jsonArray = jsonObject.getJSONArray("data");
                     // 在这里将需要执行的命令插入数据库
 
-                    System.out.println("1.命令：" + jsonArray.toJSONString());
+                    System.out.println("    1.命令：" + jsonArray.toJSONString());
 
                     for (int i = 0; i < jsonArray.size(); i++) {
                         HashMap<String, Object> param = new HashMap<String, Object>();
@@ -100,7 +101,7 @@ public class Count0Task {
                         param.put("BDC_FSBZ", jsonArray.getJSONObject(i).getString("BDC_FSBZ"));
 
                         mybatisService.makeCommond(param);
-                        System.out.println("1.命令插入数据库成功");
+                        System.out.println("    1.命令插入数据库成功");
                     }
                 }
             });
@@ -110,7 +111,7 @@ public class Count0Task {
     }
 
     public void sendPostions() {
-        System.out.println("2.sendPostions");
+        System.out.println("    2.sendPostions");
         try {
             HashMap<String, Object> param = new HashMap<String, Object>();
             final List<Dev_position> positions_changed = mybatisService.getDevPostion_changed(param);
@@ -123,7 +124,7 @@ public class Count0Task {
                         if ("success".equals(jsonObject.getString("code"))) {
                             for (int i = 0; i < positions_changed.size(); i++) {
                                 mybatisService.changeStatus_DevPostion(positions_changed.get(i));
-                                System.out.println("2.修改位置信息状态成功：" + positions_changed.get(i).getPos_id());
+                                System.out.println("    2.修改位置信息状态成功：" + positions_changed.get(i).getPos_id());
                             }
                         }
                     }
@@ -135,7 +136,7 @@ public class Count0Task {
     }
 
     public void sendMsgs() {
-        System.out.println("3.sendMsgs");
+        System.out.println("    3.sendMsgs");
         try {
             HashMap<String, Object> param = new HashMap<String, Object>();
             final List<Dev_msg> msgs = mybatisService.getDevMsg(param);
@@ -150,7 +151,7 @@ public class Count0Task {
 
                                 mybatisService.changeStatus_DevMsg(msgs.get(i));
 
-                                System.out.println("3.修改聊天状态成功：" + msgs.get(i).getMsg_id());
+                                System.out.println("    3.修改聊天状态成功：" + msgs.get(i).getMsg_id());
                             }
                         }
                     }
