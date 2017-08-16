@@ -6,7 +6,7 @@ public class UrlPath {
     // public static final String ip = "192.168.0.112";
     // public static final String ip = "yj.sxbdjw.com";
 
-    public static final String host = "http://ybygpl.sxbdjw.cn/";
+    public static final String host = "http://123.57.1.2:8080/bdwx/";
 
     public static final String url_test = host + "app/login.do";
 
