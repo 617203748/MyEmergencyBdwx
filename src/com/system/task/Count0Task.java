@@ -77,8 +77,8 @@ public class Count0Task {
     }
 
     private void getCommonds() {
+        System.out.println("1.getCommonds:" + UrlPath.getBds_bdcommand);
         try {
-            System.out.println("url:::" + UrlPath.getBds_bdcommand);
             HttpRequest.sendPost(UrlPath.getBds_bdcommand, "", new IRequestCallBack() {
                 @Override
                 public void onSuccess(String result) {
@@ -108,6 +108,7 @@ public class Count0Task {
     }
 
     public void sendPostions() {
+        System.out.println("2.sendPostions");
         try {
             HashMap<String, Object> param = new HashMap<String, Object>();
             final List<Dev_position> positions_changed = mybatisService.getDevPostion_changed(param);
@@ -132,6 +133,7 @@ public class Count0Task {
     }
 
     public void sendMsgs() {
+        System.out.println("3.sendMsgs");
         try {
             HashMap<String, Object> param = new HashMap<String, Object>();
             final List<Dev_msg> msgs = mybatisService.getDevMsg(param);
