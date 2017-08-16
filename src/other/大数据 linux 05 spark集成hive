@@ -1,0 +1,41 @@
+1.复制hive的配置文件和hive的日志文件到spark/conf下
+cd hive21/conf
+cp hive-site.xml ~/spark14/conf
+cp hive-log4j2.properties ~/spark14/conf
+
+2.修改spark-env.sh 添加
+export HADOOP_CONF_DIR=/home/hduser/hadoop-2.2.0/etc/hadoop
+export HIVE_HOME=/home/hduser/hive21
+export SPARK_CLASSPATH=$SPARK_CLASSPATH:/home/hduser/hive21/lib/mysql-connector-java-5.1.32-bin.jar:$SPARK_CLASSPATH
+
+3.修改SPARK中的日志文件
+cp log4j.properties.template log4j.properties
+gedit log4j.properties
+log4j.rootCategroy=WARN, console
+
+4.测试是否连接成功
+
+
+
+
+运行spark-shell
+    ./bin/spark-shell
+(在SHELL中依次输入如下语句，#开头行为注释不需要输入)
+import org.apache.spark.sql.hive.HiveContext
+val sqlContext = new HiveContext(sc)
+val testSparkandHive = sqlContext.sql("select * from exit_tran")
+#显示前10条结果
+testSparkandHive.take(10)
+#显示所有结果
+testSparkandHive.collect()
+
+
+
+cp /mydata/setup/hive-2.1.0/conf/hive-site.xml /mydata/setup/spark-1.4.0-bin-hadoop2.4/conf/
+cp /mydata/setup/hive-2.1.0/conf/hive-log4j2.properties /mydata/setup/spark-1.4.0-bin-hadoop2.4/conf/
+
+
+scp /mydata/setup/spark-1.4.0-bin-hadoop2.4/conf/spark-env.sh node2:/mydata/setup/spark-1.4.0-bin-hadoop2.4/conf/
+scp /mydata/setup/spark-1.4.0-bin-hadoop2.4/conf/hive-log4j2.properties node2:/mydata/setup/spark-1.4.0-bin-hadoop2.4/conf/
+scp /mydata/setup/spark-1.4.0-bin-hadoop2.4/conf/hive-site.xml node2:/mydata/setup/spark-1.4.0-bin-hadoop2.4/conf/
+

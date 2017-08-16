@@ -1,0 +1,414 @@
+Linux版本：64位CentOS 6.8
+Nginx版本：nginx 1.6.3
+PHP版本：php-7.0.1
+
+
+
+
+							安装 Nginx
+Nginx需要依赖下面3个包
+	1. gzip 模块需要 zlib 库 ( 下载: http://www.zlib.net/ )  zlib-1.2.8.tar.gz
+	2. rewrite 模块需要 pcre 库 ( 下载: http://www.pcre.org/ )  pcre-8.21.tar.gz
+	3. ssl 功能需要 openssl 库 ( 下载: http://www.openssl.org/ )  openssl-1.0.1.tar.gz
+	
+注意：
+	如果用源码安装的话，后面nginx安装的时候需要指定 --with-pcre 对应的压缩包路径，如果用二进制包安装则不需指定
+
+依赖包一键安装： 
+	yum -y install zlib zlib-devel openssl openssl--devel pcre pcre-devel
+
+此命令可以一键安装开发工具包：
+	yum -y groupinstall "Development Tools" "Development Libraries" 
+	
+
+安装命令：所有安装包及光标都在 /mydata/setup/ 下
+	openssl：
+	    tar -xzvf openssl-1.0.1s.tar.gz
+	    cd openssl-1.0.1s
+	    ./config && make && make install
+	
+	pcre:
+	    tar -xzvf pcre-8.21.tar.gz
+	    cd pcre-8.21
+	    ./configure  && make && make install
+	    
+	zlib:
+	    tar -xzvf zlib-1.2.8.tar.gz
+	    cd zlib-1.2.8
+	    ./configure  && make && make install 
+	    
+	nginx:
+	    groupadd -r nginx
+		useradd -r -g nginx -s /bin/false -M nginx
+		
+		mkdir nginx
+		mkdir -p tmp/client_body
+		mkdir -p tmp/proxy
+		mkdir -p tmp/fastcgi
+		mkdir -p tmp/uwsgi
+		mkdir -p tmp/scgi
+		
+		tar -zxvf nginx-1.6.3.tar.gz
+		cd nginx-1.6.3
+		
+		（通过）
+		./configure --prefix=/mydata/setup/nginx \
+		--sbin-path=/mydata/setup/nginx \
+		--conf-path=/mydata/setup/nginx/etc/nginx.conf \
+		--pid-path=/mydata/setup/nginx/nginx.pid \
+		--with-http_ssl_module \
+		--with-pcre=../pcre-8.21 \
+		--with-zlib=../zlib-1.2.8 \
+		--with-openssl=../openssl-1.0.1s \
+		--with-http_stub_status_module \
+		--http-client-body-temp-path=/mydata/setup/nginx/tmp/client_body \
+		--http-proxy-temp-path=/mydata/setup/nginx/tmp/proxy \
+		--http-fastcgi-temp-path=/mydata/setup/nginx/tmp/fastcgi \
+		--http-uwsgi-temp-path=/mydata/setup/nginx/tmp/uwsgi \
+		--http-scgi-temp-path=/mydata/setup/nginx/tmp/scgi \
+		--user=nginx \
+		--group=nginx
+		
+		make && make install
+
+启动与重启nginx：
+	光标移动到 /mydata/setup/nginx/
+	./nginx  			启动
+	./nginx -s reload	重启
+	./nginx -s stop     停止
+	
+	查看安装的nginx版本：
+	./nginx -v
+	查看安装的编译选项：
+    ./nginx -V
+    
+添加到系统PATH
+ #vim /etc/profile
+ 末尾添加 
+ export NGINX_HOME=/mydata/setup/nginx
+ export PATH=$PATH:$NGINX_HOME/
+ 
+
+
+重点一 Nginx的Location配置
+	1、location ^~ /t/ {
+		     	root /www/root/html/;
+		}
+	    如果一个请求的URI是/t/a.html时，web服务器将会返回服务器上的/www/root/html/t/a.html的文件。
+    
+    2、location ^~ /t/ {
+				alias /www/root/html/new_t/;
+		}
+		如果一个请求的URI是/t/a.html时，web服务器将会返回服务器上的/www/root/html/new_t/a.html的文件。注意这里是new_t，因为alias会把location后面配置的路径丢弃掉，把当前匹配到的目录指向到指定的目录。
+		
+		
+重点二 Nginx配置proxy_pass
+	nginx配置proxy_pass，需要注意转发的路径配置 
+	1、location /test/ { 
+            proxy_pass http://t6:8300; 
+	   }
+	   如果访问url = http://server/test/test.jsp，则被nginx代理后，请求路径会便问http://proxy_pass/test/test.jsp，将test/ 作为根路径，请求test/路径下的资源 
+	
+	2、location /test/ { 
+            proxy_pass http://t6:8300/; 
+	   } 
+	   如果访问url = http://server/test/test.jsp，则被nginx代理后，请求路径会变为 http://proxy_pass/test.jsp，直接访问server的根资源
+	
+    
+
+1 Nginx配置反向代理
+	worker_processes  1;
+	
+	events {
+	    worker_connections  1024;
+	}
+	
+	http {
+	    include       mime.types;
+	    default_type  application/octet-stream;
+	    sendfile        on;
+	    keepalive_timeout  65;
+	
+	    server {
+		    listen       80;
+		    server_name  localhost;    #要访问的域名，我这里用的测试域名，如果有多个，用逗号分开
+		    charset utf8;
+		    location / {  			   #http://localhost/
+			    root   html;  
+			    index  index.html index.htm;  
+		    } 
+	
+		    location /java {  		   #http://localhost/java/
+				proxy_pass	http://192.168.199.101:8080/;  
+				proxy_set_header   Host    $host;  
+				proxy_set_header   X-Real-IP   $remote_addr;   
+				proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;  
+		    } 
+	
+		    location /callcar {		   #http://localhost/callcar/
+		        proxy_pass       http://192.168.199.102:80/;              
+		        proxy_set_header Host      $host;
+		        proxy_set_header X-Real-IP $remote_addr;
+		        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		    }
+		}
+	}
+	
+	
+2 Nginx配置负载均衡
+	worker_processes  1;
+	
+	events {
+	    worker_connections  1024;
+	}
+	
+	http {
+	    include       mime.types;
+	    default_type  application/octet-stream;
+	    sendfile        on;
+	    keepalive_timeout  65;
+	
+	    #bankend为代理名称
+	    upstream backend{
+			server 192.168.199.101:8080 weight=1;  #weight权重比 数值越大则分配到此worker的几率越大
+			server 192.168.199.166:8080 weight=1;
+	    }
+	
+	    server {
+		    listen       80;
+		    server_name  localhost;    #要访问的域名，我这里用的测试域名，如果有多个，用逗号分开
+		    charset utf8;
+		
+		    location / {  
+				proxy_pass	http://backend;  
+				proxy_set_header   Host    $host;  
+				proxy_set_header   X-Real-IP   $remote_addr;   
+				proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;  
+		    } 
+		}
+	}
+	
+3 Nginx配置反向代理+负载均衡
+	worker_processes  1;
+	
+	events {
+	    worker_connections  1024;
+	}
+	
+	http {
+	    include       mime.types;
+	    default_type  application/octet-stream;
+	    sendfile        on;
+	    keepalive_timeout  65;
+	
+	    upstream backend{
+			server 192.168.199.101:8080 weight=1;
+			server 192.168.199.166:8080 weight=1;
+	    }
+	
+	    server {
+		    listen       80;
+		    server_name  localhost;    #要访问的域名，我这里用的测试域名，如果有多个，用逗号分开
+		    charset utf8;
+		
+	
+		    location / {  
+				proxy_pass	http://backend;  
+				proxy_set_header   Host    $host;  
+				proxy_set_header   X-Real-IP   $remote_addr;   
+				proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;  
+		    } 
+	
+		    location /java {  
+				proxy_pass	http://192.168.199.101:8080/;  
+				proxy_set_header   Host    $host;  
+				proxy_set_header   X-Real-IP   $remote_addr;   
+				proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;  
+		    } 
+	
+		    location /php {
+		        proxy_pass       http://192.168.199.102:80/;              
+		        proxy_set_header Host      $host;
+		        proxy_set_header X-Real-IP $remote_addr;
+		        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		    }
+		}
+	}
+	
+4 应急服务器nginx.conf的配置
+	worker_processes 1;
+	error_log  F:/nginx/error.log;
+	error_log  F:/nginx/error.log  notice;
+	error_log  F:/nginx/error.log  info;
+	
+	events {
+	    worker_connections  1024;
+	}
+	
+	http {
+	    include       mime.types;
+	    default_type  application/octet-stream;
+	
+	    #工作日志
+	    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+	                      '$status $body_bytes_sent "$http_referer" '
+	                      '"$http_user_agent" "$http_x_forwarded_for"';
+	    access_log  F:/nginx/access.log  main;
+
+	    sendfile        on;
+	    keepalive_timeout  65;
+	
+	    gzip on;
+	    gzip_min_length  1k;
+	    gzip_buffers     4 16k;
+	    gzip_http_version 1.0;
+	    gzip_comp_level 2;
+	    gzip_types       text/plain application/x-javascript text/css application/xml;
+	    gzip_vary on;
+	
+	    upstream site { 
+	    	server 127.0.0.1:8080;
+	    } 
+	
+		server {
+		    listen  80;
+		    server_name  yj.sxbdjw.com;
+		    client_max_body_size 2050m;
+		    client_body_buffer_size 1024k;
+		    #if ($host != "yj.sxbdjw.com") {
+			#return 403;
+			#rewrite ^/(.*)http://www.sxbdjw.com/;
+		    #}
+		 
+		    location / {
+		      
+		       proxy_pass http://site;
+		       proxy_set_header Host $host;
+		       proxy_set_header X-Real-IP $remote_addr;
+		       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		 
+		       ### Most PHP, Python, Rails, Java App can use this header ###
+		       proxy_set_header X-Forwarded-Proto http;
+		 
+		       ### By default we don't want to redirect it ####
+		       proxy_redirect off;
+		       proxy_connect_timeout 172800;
+		
+		       proxy_send_timeout 172800;
+		
+		       proxy_read_timeout 60;
+		       proxy_buffering off;
+		       proxy_max_temp_file_size 0;
+		
+		    }
+		    
+		    location =/images {
+				root D:/WWW/emsapp/images;
+				expires	7d;
+		    }
+		
+		    location =/js {
+				root D:/WWW/emsapp/js;
+				expires 7d;
+		    }
+		
+		    location =/ext-4.2.1 {
+				root D:/WWW/emsapp/ext-4.2.1;
+				expires 7d;
+		    }
+		
+		    location =/upload {
+				root D:/WWW/emsapp/upload;
+				expires 7d;
+		    }
+		    location =/WEB-INF {  
+		           deny  all;  
+		    }
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+													安装PHP7
+													
+# ./configure   --help
+# ./configure --prefix=/mydata/php7 \
+ --with-curl \
+ --with-freetype-dir \
+ --with-gd \
+ --with-gettext \
+ --with-iconv-dir \
+ --with-kerberos \
+ --with-libdir=lib64 \
+ --with-libxml-dir \
+ --with-mysqli \
+ --with-openssl \
+ --with-pcre-regex \
+ --with-pdo-mysql \
+ --with-pdo-sqlite \
+ --with-pear \
+ --with-png-dir \
+ --with-xmlrpc \
+ --with-xsl \
+ --with-zlib \
+ --enable-fpm \
+ --with-gettext \
+ --enable-session \   
+ --enable-bcmath \
+ --enable-libxml \
+ --enable-inline-optimization \
+ --enable-gd-native-ttf \
+ --enable-mbregex \
+ --enable-mbstring \
+ --enable-opcache \
+ --enable-pcntl \
+ --enable-shmop \
+ --enable-soap \
+ --enable-sockets \
+ --enable-sysvsem \
+ --enable-xml \
+ --enable-zip
+ 
+ 复制配置文件
+ # cp php.ini-development /mydata/php7/lib/php.ini
+ # cp /mydata/php7/etc/php-fpm.conf.default /mydata/php7/etc/php-fpm.conf
+ # cp /mydata/php7/etc/php-fpm.d/www.conf.default /mydata/php7/etc/php-fpm.d/www.conf
+ 
+ 
+ nginx 集成 php
+ 	#groupadd www-data
+	#useradd -g www-data www-data
+	
+	1 将/mydata/php7/lib/php.ini中的		;cgi.fix_pathinfo=1		 改为		cgi.fix_pathinfo=0 	
+	2 将/mydata/php7/etc/php-fpm.d/www.conf的
+		user = nobody
+		group = nobody
+		改为
+		user = www-data
+		group = www-data
+	3 设置/mydata/setup/nginx/etc/nginx.conf
+		user www-data;
+	
+		location ~ .php$ {
+			root html;
+			fastcgi_pass 127.0.0.1:9000;
+			fastcgi_index index.php;
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+			include fastcgi_params;
+		}
+	
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

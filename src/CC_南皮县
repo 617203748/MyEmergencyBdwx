@@ -1,0 +1,87 @@
+固定IP
+	221.195.36.130
+叫车电话
+	0317-8890009
+	
+短信平台
+	用户名  zzz1200123
+	密码	zzz1200123
+	邮箱	646244835@qq.com
+	手机号  18135110832
+	
+
+微信公众号 				桃杳工作室
+账号 m18135110832
+密码 zzz1200123
+
+微信服务号				南皮县出租车电召平台
+微信号 calltaxi_nanpi
+密码 zzz1200123
+登陆邮箱 np519taxi@126.com
+
+微信公小程序			南皮县出租车电召平台
+微信号
+密码 zzz1200123
+登陆邮箱 a380455881@163.com
+
+
+全部邮箱
+617203748@qq.com
+
+Android keystore
+证书指纹 (SHA1): A0:62:E3:97:D5:6E:AA:94:88:91:E6:42:27:D5:96:1B:45:EE:8F:35      
+
+
+高德地图 			617203748@qq.com
+	0da99534a2c0acb4afcf9178e9c6f977
+
+
+微信公众平台
+	AppID(应用ID)			wxf040a3da8cd0a342AppID
+	AppSecret(应用密钥)		6d4406f4ba38c88d812d70f8951593bb
+	Token(令牌)				calltaxi_nanpi
+	EncodingAESKey(消息加解密密钥)		nismmzHMaY6AZ0xuoLmoskBpgjkF4n0EUAzGxlQzC3H
+	
+腾讯信鸽			617203748
+	正式版
+	ACCESS ID 2100212316
+	ACCESS KEY AZQFR9E1872I
+	SECRET KEY cfae8b4fec4d8e62cca7bb0bb9ddcda3
+	
+	
+融云即时聊天		617203748@qq.com
+	生产环境
+	App Key		3argexb6rry3e
+	App Secret	X6tLTqGe8v5S2
+
+	开发环境
+	App Key		tdrvipksrrat5
+	App Secret	pjV6r35yLY
+	
+	
+微信小程序
+	数据库 		mysql5.6
+	内网		10.66.196.183
+	外网账号	cdb_outerroot
+	root密码	bdjw@123
+	端口		3306
+	
+	JavaTomcat	115.159.125.87		DELL2008dell2008	10.154.21.99(内)
+	ApachePHP	123.206.200.164		DELL2008dell2008	10.154.35.66(内)
+	
+	
+融云群组
+	group_np1 手机用户  4
+	group_np2 飞歌用户	115	
+	group_np3 测试组	2 		18135110832		15343406720	
+	group_np4 优先组	5
+	group_np5 滞后组	7
+	group_npall 全组	131
+	
+	
+	
+	
+	
+	
+	
+	

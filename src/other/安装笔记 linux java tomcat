@@ -1,0 +1,53 @@
+
+										安装Java环境
+步骤一：安装所需要系统库相关库文件
+	# yum install wget
+	# yum install lrzsz		（rz是上传命令）
+	# yum -y groupinstall "Perl Support" 
+	# yum groupinstall "Development Tools" 
+	# yum install -y gcc gcc-c++ gcc-g77 autoconf automake zlib* fiex* libxml* ncurses-devel libmcrypt* libtool-ltdl-devel* make vim bison cmake
+	# yum install -y gcc gcc-c++ openssl openssl-devel ncurses ncurses-devel cmake
+										
+步骤二：上传jdk文件到 /mydata文件夹下
+tar xzvf jdk-8u112-linux-x64.gz
+将jdk解压到 /mydata/setup/java/ 文件夹下
+
+步骤三：添加到系统PATH 
+# vim /etc/profile
+	末尾添加
+	export JAVA_HOME=/mydata/java/jdk1.8.0_112
+	export ANDROID_JAVA_HOME=$JAVA_HOME
+	export JRE_HOME=/mydata/java/jdk1.8.0_112/jre
+	export CLASSPATH=/mydata/java/jdk1.8.0_112/lib
+	export PATH=$JAVA_HOME/bin:$PATH
+
+步骤四：执行java -version命令，验证jdk是否安装成功：
+source /etc/profile	
+
+
+
+
+
+										安装tomcat
+步骤一：上传tomcat文件到 /mydata 文件夹下
+tar xzvf apache-tomcat-7.0.47.tar.gz
+将tomcat文件解压到 /mydata/setup 文件夹下
+			
+步骤二：vim /etc/profile  设置环境变量，在环境变量文件最后加入以下内容：					
+
+export JAVA_HOME=/mydata/setup/java/jdk1.8.0_112
+export CLASSPATH=.:$JAVA_HOME/jre/lib/rt.jar:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+export TOMCAT_HOME=/mydata/setup/apache-tomcat-7.0.47
+export CATALINA_HOME=/mydata/setup/apache-tomcat-7.0.47
+export PATH=$PATH:$TOMCAT_HOME/bin
+
+步骤三：执行
+source /etc/profile
+
+步骤四：启动tomcat
+cd /mydata/setup/apache-tomcat-7.0.47/
+./startup.sh
+
+步骤五：关闭防火墙
+service iptables stop --停止
+service iptables start --启动

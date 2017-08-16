@@ -1,0 +1,276 @@
+								Linux 安装 Mysql5.6.34
+
+1 安装所需软件
+2 安装cmake
+3 tar.gz形式安装mysql
+4 配置与启动
+5 rpm形式安装mysql
+6 mysql配置参数详细说明
+
+0 设置安装目录
+	# vi /etc/sysconfig/network-scripts/ifcfg-eth0
+	# cd /mydata
+	# mkdir setup
+
+1 安装所需要系统库相关库文件
+	# yum install wget
+	# yum install lrzsz		（rz是上传命令）
+	# yum -y groupinstall "Perl Support" 
+	# yum groupinstall "Development Tools" 
+	# yum install -y gcc gcc-c++ gcc-g77 autoconf automake zlib* fiex* libxml* ncurses-devel libmcrypt* libtool-ltdl-devel* make vim bison cmake
+	# yum install -y gcc gcc-c++ openssl openssl-devel ncurses ncurses-devel cmake
+
+2 安装cmake（可选）
+    将 cmake-2.8.12.tar.gz 上传到 /mydata 文件夹下 
+	# tar zxvf cmake-2.8.12.2.tar.gz
+	# cd cmake-2.8.12.2
+	# ./configure
+	# make && make install
+	# make uninstall //卸载
+
+3 编译安装mysql
+    将 mysql-5.6.34.tar.gz 上传到 /mydata 文件夹下
+    # /usr/sbin/groupadd mysql 
+    # /usr/sbin/useradd -g mysql mysql 
+	# tar xvf mysql-5.6.34.tar.gz
+	# cd mysql-5.6.34
+	# cmake -DCMAKE_INSTALL_PREFIX=/mydata/setup/mysql \
+	-DMYSQL_DATADIR=/mydata/setup/mysql/data \
+	-DSYSCONFDIR=/mydata/setup/mysql/etc \
+	-DMYSQL_UNIX_ADDR=/mydata/setup/mysql/mysql.sock \
+	-DDEFAULT_CHARSET=utf8 \
+	-DDEFAULT_COLLATION=utf8_general_ci \
+	-DEXTRA_CHARSETS=all \
+	-DWITH_EXTRA_CHARSETS:STRING=all \
+	-DWITH_READLINE=1 \
+	-DENABLED_LOCAL_INFILE=1 \
+	-DWITH_SSL=system \
+	-DWITH_ZLIB=system \
+	-DWITH_INNOBASE_STORAGE_ENGINE=1 \
+	-DWITH_MYISAM_STORAGE_ENGINE=1 \
+	-DWITH_MEMORY_STORAGE_ENGINE=1 \
+	-DWITH_ARCHIVE_STORAGE_ENGINE=1 \
+	-DWITH_BLACKHOLE_STORAGE_ENGINE=1 \
+	-DWITH_PARTITION_STORAGE_ENGINE=1 \
+	-DMYSQL_USER=mysql \
+	-DENABLE_DOWNLOADS=1 \
+	-DMYSQL_TCP_PORT=3306
+	# make
+	# make install
+
+		交叉编译
+		-DCMAKE_INSTALL_PREFIX= 安装根目录
+		-DMYSQL_DATADIR=数据库 数据目录
+		-DSYSCONFDIR=/etc/mysql 指向mysql配置文件目录（/etc/mysql）
+		-DWITH_MYISAM_STORAGE_ENGINE=1  编译myisam存储引擎，默认的存储引擎，不加也可以
+		-DWITH_INNOBASE_STORAGE_ENGINE=1 支持InnoDB存储引擎，这个也是默认安装的
+		-DWITH_READLINE=1 使用readline功能
+		-DCMAKE_INSTALL_PREFIX=  unix套接字目录
+		-DDEFAULT_CHARSET= 默认字符集
+		-DDEFAULT_COLLATION=默认编码
+		-DWITH_EXTRA_CHARSETS= 额外的编码，请使用ALL来编译。
+		-DENABLED_LOCAL_INFILE=1 可以使用load data infile命令从本地导入文件
+
+	cmake 失败后 删除CMakeCache.txt 才能从新 正确 cmake
+	#查找 find / -name CMakeCache.txt
+	# rm -rf /mydata/cmake-2.8.12/Tests/Complex/Cache/CMakeCache.txt
+	# rm -rf /mydata/cmake-2.8.12/Tests/ComplexOneConfig/Cache/CMakeCache.txt
+	# rm -rf /mydata/cmake-2.8.12/Tests/ComplexRelativePaths/Cache/CMakeCache.txt
+	# rm -rf /mydata/mysql-5.6.24/CMakeCache.txt
+	
+4 配置mysql
+	# chmod +w /mydata/setup/mysql #改变目录的权限
+	# chown -R mysql:mysql /mydata/setup/mysql   #改变目录拥有者与所属组 
+	# ln -s /mydata/setup/mysql/lib/libmysqlclient.so.18 /usr/lib/libmysqlclient.so.18 
+	# cd /mydata/setup/mysql/support-files/ 
+	# cp my-default.cnf /etc/my.cnf 		# 选择默认 配置文件 适合大型服务器 
+	# cp mysql.server /etc/init.d/mysqld    # 复制启动文件
+	
+5 配置启动mysql
+	# vim /etc/my.cnf 
+		在[mysqld]下面添加 
+		basedir = /mydata/setup/mysql
+		datadir = /mydata/setup/mysql/data
+		log-error = /mydata/setup/mysql/logs/mysql_error.log
+		pid-file = /mydata/setup/mysql/mysql.pid
+		default-storage-engine=INNODB
+		user = mysql
+
+	mysql 初始化安装  执行以下命令 
+	# /mydata/setup/mysql/scripts/mysql_install_db \--basedir=/mydata/setup/mysql \--datadir=/mydata/setup/mysql/data \--user=mysql
+	
+	将 mysql 加入开机启动 
+	# chmod +x /etc/init.d/mysqld 
+	# vim /etc/init.d/mysqld （编辑此文件，查找并修改以下变量内容：） 
+		basedir=/mydata/setup/mysql
+		datadir=/mydata/setup/mysql/data
+	
+	# chkconfig --add mysqld   //添加至服务列表 
+	# chkconfig --level 345 mysqld on 
+	
+	
+	进入mysql后开启远程连接
+	grant all privileges on *.* to 'root'@'%' identified by 'root' with  grant option;
+	设置好后刷新
+	FLUSH PRIVILEGES;
+	
+6 添加到系统PATH
+	vim /etc/profile
+	PATH=/mydata/setup/mysql/bin:$PATH
+	export PATH
+	source /etc/profile	
+	
+创建日志文件夹
+	# mkdir /mydata/setup/mysql/logs
+启动MySQL服务器 
+[root@localhost ~]# service mysqld start 
+设置密码 
+[root@localhost ~]# mysql_secure_installation 
+	
+NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MySQL
+SERVERS IN PRODUCTION USE! PLEASE READ EACH STEP CAREFULLY!
+In order to log into MySQL to secure it, we'll need the current
+password for the root user. If you've just installed MySQL, and
+you haven't set the root password yet, the password will be blank,
+so you should just press enter here.
+Enter current password for root (enter for none):<–初次运行直接回车
+OK, successfully used password, moving on…
+Setting the root password ensures that nobody can log into the MySQL
+root user without the proper authorisation.
+Set root password? [Y/n] <– 是否设置root用户密码，输入y并回车或直接回车
+New password: <– 设置root用户的密码
+Re-enter new password: <– 再输入一次你设置的密码
+Password updated successfully!
+Reloading privilege tables..
+… Success!
+By default, a MySQL installation has an anonymous user, allowing anyone
+to log into MySQL without having to have a user account created for
+them. This is intended only for testing, and to make the installation
+go a bit smoother. You should remove them before moving into a
+production environment.
+Remove anonymous users? [Y/n] <– 是否删除匿名用户,生产环境建议删除，所以直接回车
+… Success!
+Normally, root should only be allowed to connect from 'localhost'. This
+ensures that someone cannot guess at the root password from the network.
+Disallow root login remotely? [Y/n] <–是否禁止root远程登录,根据自己的需求选择Y/n并回车,建议禁止
+… Success!
+By default, MySQL comes with a database named 'test' that anyone can
+access. This is also intended only for testing, and should be removed
+before moving into a production environment.
+Remove test database and access to it? [Y/n] <– 是否删除test数据库,直接回车
+- Dropping test database…
+… Success!
+- Removing privileges on test database…
+… Success!
+Reloading the privilege tables will ensure that all changes made so far
+will take effect immediately.
+Reload privilege tables now? [Y/n] <– 是否重新加载权限表，直接回车
+… Success!
+Cleaning up…
+All done! If you've completed all of the above steps, your MySQL
+installation should now be secure.
+Thanks for using MySQL!
+	
+	
+	
+	
+	
+MySql优化
+	1G内存的服务器无力为MySql提供40MB以上的物理内存。
+	MySQL 5.6相比于前代GA版本性能提升显著，但默认缓存设置对于小型站点并不合理。通过修改my.cnf中的performance_schema_max_table_instances参数，能够有效降低内存占用。
+	
+	Mysql的默认配置
+		performance_schema_max_table_instances 12500
+		table_definition_cache 1400
+		table_open_cache 2000
+	
+	
+	# vim /etc/my.cnf
+	
+	[mysqld] 配置如下
+	文件开始
+		[mysqld]
+		basedir = /mydata/setup/mysql
+		datadir = /mydata/setup/mysql/data
+		log-error = /mydata/setup/mysql/logs/mysql_error.log
+		pid-file = /mydata/setup/mysql/mysql.pid
+		
+		default-storage-engine=INNODB
+		user = mysql
+		
+		#降低物理内存
+		performance_schema_max_table_instances=400
+		table_definition_cache=400
+		table_open_cache=256
+		
+		#innodb_buffer_pool_size = 64M
+		#query_cache_size = 16M
+		#tmp_table_size = 64M
+		#key_buffer_size
+		
+		sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES 
+	文件结束	
+	
+	
+	
+	
+							Windows 安装 Mysql5.6.34 
+1 将 mysql-5.6.34-winx64.zip 解压到 D:\DevelopeTools
+
+2 编辑 D:\DevelopeTools\mysql-5.6.34-winx64\my-default.ini
+		[mysqld]
+		basedir = "D:/DevelopeTools/mysql-5.6.34-winx64"
+		datadir = "D:/DevelopeTools/mysql-5.6.34-winx64/data"
+		port = 3306
+		default-storage-engine=myisam
+		sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES 
+		
+		[client]
+		default-character-set = utf8
+
+3 管理员身份运行CMD 跳转到 D:\DevelopeTools\mysql-5.6.34-winx64\bin 目录下 
+		mysqld -install
+
+4 启动服务 Mysql
+
+5 mysql -uroot 进入mysql界面
+
+	use mysql;
+	update user set password = password("root") where user = "root";
+　　flush privileges;
+	quit
+	
+	mysql -uroot -proot 
+	
+	安装完毕
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

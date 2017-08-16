@@ -1,0 +1,21 @@
+将 openfire_4_1_4.tar.gz 上传到 /mydata/setup/ 下解压缩
+
+
+增加环境变量
+vim /etc/profile
+	#Openfire
+	export OPENFIRE=/mydata/setup/openfire
+	export PATH=$PATH:$OPENFIRE/bin
+	
+进入mysql创建数据库openfire并初始化数据库
+	source /mydata/setup/openfire/resources/database/openfire_mysql.sql;
+
+
+启动停止
+	/mydata/setup/openfire/bin/openfire {start|stop|run|run-redirect|status|restart|force-reload}
+	openfire start
+	openfire stop
+	
+	
+访问网址
+	http://112.120.125.139:9090

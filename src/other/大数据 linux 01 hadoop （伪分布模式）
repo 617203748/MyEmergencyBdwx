@@ -1,0 +1,179 @@
+															安装Java环境
+步骤一：安装所需要系统库相关库文件
+	# yum install wget
+	# yum install lrzsz		（rz是上传命令）
+	# yum -y groupinstall "Perl Support" 
+	# yum groupinstall "Development Tools" 
+	# yum install -y gcc gcc-c++ gcc-g77 autoconf automake zlib* fiex* libxml* ncurses-devel libmcrypt* libtool-ltdl-devel* make vim bison cmake
+	# yum install -y gcc gcc-c++ openssl openssl-devel ncurses ncurses-devel cmake
+										
+步骤二：上传jdk文件到 /mydata文件夹下
+tar xzvf jdk-8u112-linux-x64.gz
+将jdk解压到 /mydata/setup/java/ 文件夹下
+
+步骤三：添加到系统PATH 
+# vim /etc/profile
+	末尾添加
+	export JAVA_HOME=/mydata/java/jdk1.8.0_112
+	export ANDROID_JAVA_HOME=$JAVA_HOME
+	export JRE_HOME=/mydata/java/jdk1.8.0_112/jre
+	export CLASSPATH=/mydata/java/jdk1.8.0_112/lib
+	export PATH=$JAVA_HOME/bin:$PATH
+
+步骤四：执行java -version命令，验证jdk是否安装成功：
+# source /etc/profile	
+
+步骤五：验证安装
+	javac
+	
+														安装Hadoop
+将 hadoop-2.2.0.tar.gz 上传到 /mydata/setup 文件夹下并解压缩得到 hadoop-2.2.0
+# vim /etc/profile
+    export HADOOP_HOME=/mydata/setup/hadoop-2.2.0
+    export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
+验证
+# hadoop version
+
+
+												CentOS创建免密码SSH（密钥）	
+# cd ~
+# ll -s
+# cd .ssh 
+或者 直接 cd /root/.ssh
+	1、输入以下命令：ssh-keygen -t rsa
+	2、输入命令ls：产生两个文件：id_rsa id_rsa.pub
+	3、复制id_rsa.pub，并命名为authorized_key
+	   # cp ~/.ssh/id_rsa.pub  ~/.ssh/authorized_keys
+	4、执行ssh localhost。
+验证
+#ssh localhost
+
+
+
+												配置Hadoop
+# mkdir /mydata/setup/hadoop-2.2.0/tmp
+# mkdir /mydata/setup/hadoop-2.2.0/dfs
+# mkdir /mydata/setup/hadoop-2.2.0/dfs/name
+# mkdir /mydata/setup/hadoop-2.2.0/dfs/data
+												
+# cd /mydata/setup/hadoop-2.2.0/etc/hadoop
+
+1、配置$HADOOP_HOME/etc/hadoop/目录中如下的配置文件：
+    1) vim hadoop-env.sh
+       export JAVA_HOME=/mydata/java/jdk1.8.0_112
+
+    2) vim core-site.xml
+       注：如果没有hddata/tmp目录，要先在磁盘上创建。
+       <configuration>
+		   <property>
+		    <!-- 集群的主节点 -->
+			<name>fs.defaultFS</name>
+			<value>hdfs://node0:9000/</value>
+		   </property>
+		   <property>
+		    <!-- 程序运行的临时文件夹 -->
+			<name>hadoop.tmp.dir</name>
+			<value>/mydata/setup/hadoop-2.2.0/tmp</value>
+		   </property>
+	</configuration>
+
+    3) vim hdfs-site.xml
+       注：如果没有hddata/name目录和hddata/data目录，要先在磁盘上创建。
+       <configuration>
+			<property>
+				<!-- 分布式系统的源信息 -->
+				<name>dfs.namenode.name.dir</name>
+				<value>/mydata/setup/hadoop-2.2.0/dfs/name</value>
+			</property>
+			<property>
+			    <!-- 存放数据 -->
+				<name>dfs.datanode.data.dir</name>
+				<value>/mydata/setup/hadoop-2.2.0/dfs/data</value>
+			</property>
+			<!--设置HDFS文件系统块的复制份数，默认是3 伪分布模式要设为1-->
+			<property>
+			<!-- 指定每个节点存储多少块 -->
+				<name>dfs.replication</name>
+				<value>2</value>
+			</property>
+       </configuration>
+
+    4) cp mapred-site.xml.template mapred-site.xml
+       vim mapred-site.xml
+       注：默认没有这个文件，从mapred-site.xml.template复制一份并改名。
+	<configuration>
+	  <property>
+	     <name>mapreduce.framework.name</name>
+	     <value>yarn</value>
+	  </property>
+	</configuration>
+
+    5) vim yarn-site.xml
+	<property>
+		<name>yarn.nodemanager.aux-services</name>
+		<value>mapreduce_shuffle</value>
+	</property>
+	<property>
+		<name>yarn.nodemanager.aux-services.mapreduce_shuffle.class</name>
+		<value>org.apache.hadoop.mapred.ShuffleHandler</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.hostname</name>
+		<!-- 如果是集群的话 这里是集群主机的IP -->
+		<value>node0</value>
+	</property>
+	
+	6)slaves 集群分节点
+
+2、格式化hdfs(仅需执行格式化一次)。在终端窗口，执行命令:
+   $ hdfs namenode -format
+
+
+3、如果有host缺陷
+	vim /etc/hsots
+
+---------------------------------------------------------------
+在Hadoop上执行MR程序(伪分布模式)：
+1、启动HDFS集群:
+   $ start-dfs.sh
+2、使用jps命令查看当前节点上运行的服务：
+   $ jps
+3、查看HDFS文件目录:
+   $ hdfs dfs -ls /
+
+4、启动yarn:
+   $ start-yarn.sh
+   $ jps
+5、运行pi程序：
+   $ hadoop jar /mydata/setup/hadoop-2.2.0/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.2.0.jar pi 1 20
+  
+6、关闭集群：
+   $ stop-yarn.sh
+   $ stop-dfs.sh
+   
+Hadoop 安装文件夹下bin目录中的 hadoop 和 htfs 是可执行程序，命令行中的命令大部分以这两个单词开头
+
+
+重要概念
+	
+	
+															
+															
+													
+
+															
+															
+															
+																				
+																				
+
+
+
+
+
+
+
+
+
+
+

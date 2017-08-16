@@ -1,0 +1,29 @@
+Hadoop 启动关闭
+	启动HDFS集群:
+		# start-dfs.sh
+	启动yarn:
+		# start-yarn.sh
+	
+	关闭yarn:
+		# stop-yarn.sh
+	关闭HDFS集群:
+		# stop-dfs.sh
+		
+		
+Hbase 启动关闭
+	# start-hbase.sh
+	
+Hive 启动关闭
+	# hive
+	
+Spark 启动关闭
+	# cd /mydata/setup/spark-1.4.0-bin-hadoop2.4
+	启动方式1：
+		sbin/start-master.sh
+		sbin/start-slaves.sh
+	启动方式2：
+		sbin/start-all.sh
+		
+	关闭方式：
+		cd spark-1.4.0-bin-hadoop2.4
+		sbin/stop-all.sh
