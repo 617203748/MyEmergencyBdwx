@@ -2,22 +2,12 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 
-	<typeAliases>
-		<typeAlias alias="T_order" type="com.taxi.bean.T_order" />
-		<typeAlias alias="T_user" type="com.taxi.bean.T_user" />
-		<typeAlias alias="T_despire" type="com.taxi.bean.T_despire" />
-		<typeAlias alias="T_missuser" type="com.taxi.bean.T_missuser" />
-		<typeAlias alias="T_position" type="com.taxi.bean.T_position" />
-		<typeAlias alias="T_institution" type="com.taxi.bean.T_institution" />
-	</typeAliases>
+    <typeAliases>
+        <typeAlias alias="T_despire" type="com.taxi.bean.T_despire"/>
+    </typeAliases>
 
-	<mappers>
-		<mapper resource="com/taxi/mybatis/t_order.xml" />
-		<mapper resource="com/taxi/mybatis/t_user.xml" />
-		<mapper resource="com/taxi/mybatis/t_despire.xml" />
-		<mapper resource="com/taxi/mybatis/t_missuser.xml" />
-		<mapper resource="com/taxi/mybatis/t_position.xml" />
-		<mapper resource="com/taxi/mybatis/t_institution.xml" />
-	</mappers>
+    <mappers>
+        <mapper resource="com/taxi/mybatis/t_despire.xml"/>
+    </mappers>
 
 </configuration>

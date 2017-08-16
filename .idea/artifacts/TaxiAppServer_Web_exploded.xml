@@ -8,7 +8,6 @@
           <element id="module-output" name="MyEmergencyBdwx" />
         </element>
         <element id="directory" name="lib">
-          <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/aliyun-sdk-oss-2.4.0.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/aopalliance-1.0.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/aspectjrt.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/aspectjweaver.jar" />
@@ -29,7 +28,6 @@
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/httpmime-4.3.5.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/jackson-all-1.9.5.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/jcaptcha-all-1.0-RC4.jar" />
-          <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/jedis-2.1.0.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/jersey-bundle-1.19.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/json.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/jstl-1.1.2.jar" />
@@ -66,7 +64,6 @@
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/spring-webmvc-4.1.6.RELEASE.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/spring-webmvc-portlet-4.1.6.RELEASE.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/spring-websocket-4.1.6.RELEASE.jar" />
-          <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/XingeApp.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/javax.interceptor-api-1.2.jar" />
         </element>
       </element>

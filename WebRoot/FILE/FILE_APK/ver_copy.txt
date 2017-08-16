@@ -1,6 +1,0 @@
-﻿[
-  {
-    "conf_voice_url":"http://callcar-np.oss-cn-qingdao.aliyuncs.com",
-    "conf_voice_url":"http://221.195.36.130:1234/TaxiAppServer/FILE/FILE_VOICE_AMR/",
-  }
-]
