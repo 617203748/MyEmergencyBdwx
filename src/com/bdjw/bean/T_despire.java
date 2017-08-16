@@ -1,6 +1,4 @@
-package com.taxi.bean;
-
-import java.util.Date;
+package com.bdjw.bean;
 
 public class T_despire {
 

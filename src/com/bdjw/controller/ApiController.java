@@ -1,6 +1,6 @@
-package com.taxi.controller;
+package com.bdjw.controller;
 
-import com.taxi.base.BaseContrller;
+import com.bdjw.base.BaseContrller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 

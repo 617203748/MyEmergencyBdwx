@@ -3,11 +3,11 @@
 <configuration>
 
     <typeAliases>
-        <typeAlias alias="T_despire" type="com.taxi.bean.T_despire"/>
+        <typeAlias alias="T_despire" type="com.bdjw.bean.T_despire"/>
     </typeAliases>
 
     <mappers>
-        <mapper resource="com/taxi/mybatis/t_despire.xml"/>
+        <mapper resource="com/bdjw/mybatis/t_despire.xml"/>
     </mappers>
 
 </configuration>

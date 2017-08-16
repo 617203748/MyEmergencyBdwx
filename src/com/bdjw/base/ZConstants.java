@@ -1,4 +1,4 @@
-package com.taxi.base;
+package com.bdjw.base;
 
 public class ZConstants {
 

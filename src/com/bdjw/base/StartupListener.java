@@ -1,4 +1,4 @@
-package com.taxi.base;
+package com.bdjw.base;
 
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
