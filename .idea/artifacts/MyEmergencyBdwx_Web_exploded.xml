@@ -1,11 +1,11 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="TaxiAppServer:Web exploded">
-    <output-path>$PROJECT_DIR$/out/artifacts/TaxiAppServer_Web_exploded</output-path>
+  <artifact type="exploded-war" name="MyEmergencyBdwx:Web exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/MyEmergencyBdwx_Web_exploded</output-path>
     <root id="root">
       <element id="javaee-facet-resources" facet="MyEmergencyBdwx/web/Web" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="module-output" name="MyEmergencyBdwx" />
+          <element id="javaee-facet-classes" facet="MyEmergencyBdwx/web/Web" />
         </element>
         <element id="directory" name="lib">
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/aopalliance-1.0.jar" />
@@ -27,6 +27,7 @@
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/httpcore-4.3.2.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/httpmime-4.3.5.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/jackson-all-1.9.5.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/javax.interceptor-api-1.2.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/jcaptcha-all-1.0-RC4.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/jersey-bundle-1.19.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/json.jar" />
@@ -64,7 +65,6 @@
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/spring-webmvc-4.1.6.RELEASE.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/spring-webmvc-portlet-4.1.6.RELEASE.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/spring-websocket-4.1.6.RELEASE.jar" />
-          <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/javax.interceptor-api-1.2.jar" />
         </element>
       </element>
     </root>

@@ -12,13 +12,13 @@ public interface MybatisDao {
 
     public List<Dev_position> getDevPostion_unchange(HashMap<String, Object> param) throws Exception;
 
-    public int changePostion(HashMap<String, Object> param) throws Exception;
+    public int changePostion(Dev_position position) throws Exception;
 
     public List<Dev_msg> getDevMsg(HashMap<String, Object> param) throws Exception;
 
     public int makeCommond(HashMap<String, Object> param) throws Exception;
 
-    public int changeStatus_DevPostion(HashMap<String, Object> param) throws Exception;
+    public int changeStatus_DevPostion(Dev_position position) throws Exception;
 
-    public int changeStatus_DevMsg(HashMap<String, Object> param) throws Exception;
+    public int changeStatus_DevMsg(Dev_msg msg) throws Exception;
 }

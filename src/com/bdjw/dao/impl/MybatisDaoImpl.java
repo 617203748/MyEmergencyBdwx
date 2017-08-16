@@ -23,8 +23,8 @@ public class MybatisDaoImpl extends SqlSessionDaoSupport implements MybatisDao {
     }
 
     @Override
-    public int changePostion(HashMap<String, Object> param) throws Exception {
-        return this.getSqlSession().update(namespace + "changePostion", param);
+    public int changePostion(Dev_position position) throws Exception {
+        return this.getSqlSession().update(namespace + "changePostion", position);
     }
 
     @Override
@@ -38,12 +38,12 @@ public class MybatisDaoImpl extends SqlSessionDaoSupport implements MybatisDao {
     }
 
     @Override
-    public int changeStatus_DevPostion(HashMap<String, Object> param) throws Exception {
-        return this.getSqlSession().update(namespace + "changeStatus_DevPostion", param);
+    public int changeStatus_DevPostion(Dev_position position) throws Exception {
+        return this.getSqlSession().update(namespace + "changeStatus_DevPostion", position);
     }
 
     @Override
-    public int changeStatus_DevMsg(HashMap<String, Object> param) throws Exception {
-        return this.getSqlSession().update(namespace + "changeStatus_DevMsg", param);
+    public int changeStatus_DevMsg(Dev_msg msg) throws Exception {
+        return this.getSqlSession().update(namespace + "changeStatus_DevMsg", msg);
     }
 }

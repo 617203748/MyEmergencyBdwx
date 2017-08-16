@@ -37,9 +37,9 @@ public class MybatisServiceImpl implements MybatisService {
     }
 
     @Override
-    public int changePostion(HashMap<String, Object> param) {
+    public int changePostion(Dev_position position) {
         try {
-            return dao.changePostion(param);
+            return dao.changePostion(position);
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
@@ -67,9 +67,9 @@ public class MybatisServiceImpl implements MybatisService {
     }
 
     @Override
-    public int changeStatus_DevPostion(HashMap<String, Object> param) {
+    public int changeStatus_DevPostion(Dev_position position) {
         try {
-            return dao.changeStatus_DevPostion(param);
+            return dao.changeStatus_DevPostion(position);
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
@@ -77,9 +77,9 @@ public class MybatisServiceImpl implements MybatisService {
     }
 
     @Override
-    public int changeStatus_DevMsg(HashMap<String, Object> param) {
+    public int changeStatus_DevMsg(Dev_msg msg) {
         try {
-            return dao.changeStatus_DevMsg(param);
+            return dao.changeStatus_DevMsg(msg);
         } catch (Exception e) {
             e.printStackTrace();
             return 0;

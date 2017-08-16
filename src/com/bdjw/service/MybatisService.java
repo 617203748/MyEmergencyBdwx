@@ -12,13 +12,13 @@ public interface MybatisService {
 
     public List<Dev_position> getDevPostion_unchange(HashMap<String, Object> param);
 
-    public int changePostion(HashMap<String, Object> param);
+    public int changePostion(Dev_position position);
 
     public List<Dev_msg> getDevMsg(HashMap<String, Object> param);
 
     public int makeCommond(HashMap<String, Object> param);
 
-    public int changeStatus_DevPostion(HashMap<String, Object> param);
+    public int changeStatus_DevPostion(Dev_position position);
 
-    public int changeStatus_DevMsg(HashMap<String, Object> param);
+    public int changeStatus_DevMsg(Dev_msg msg);
 }
