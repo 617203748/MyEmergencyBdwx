@@ -50,8 +50,6 @@ public class Count0Task {
                 @Override
                 public void onSuccess(String result) {
 
-                    System.out.println("    getBds_bdcommand result:" + result);
-
                     //返回整体
                     JSONObject jsonObject = JSONObject.parseObject(result);
 
@@ -76,7 +74,7 @@ public class Count0Task {
                             System.out.println("    1.命令插入数据库成功");
                         }
                     } else {
-                        System.out.println("errMsg:" + jsonObject.getString("errMsg"));
+                        System.out.println("    errMsg:" + jsonObject.getString("errMsg"));
                     }
                 }
             });
