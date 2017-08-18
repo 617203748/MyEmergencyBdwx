@@ -13,8 +13,8 @@ public class UrlPath {
 
     public static final String handleSavePosition = host + "app/handleSavePosition.do";
 
-    public static final String handleSaveMsg = host + "app/handleSaveMsg.do";
+    public static final String handleSaveMsg = ApiPhp + "act=app&m=handleSaveMsg";
 
-    //public static final String getBds_bdcommand = host + "app/getBds_bdcommand.do";
+
     public static final String getBds_bdcommand = ApiPhp + "act=app&m=getBds_bdcommand";
 }

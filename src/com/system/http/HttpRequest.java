@@ -1,9 +1,6 @@
 package com.system.http;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
@@ -68,7 +65,7 @@ public class HttpRequest {
      * @return 所代表远程资源的响应结果
      */
     public static void sendPost(String url, String param, IRequestCallBack callBack) {
-        PrintWriter out = null;
+        OutputStreamWriter out = null;
         BufferedReader in = null;
         String result = "";
         try {
@@ -83,9 +80,9 @@ public class HttpRequest {
             conn.setDoOutput(true);
             conn.setDoInput(true);
             // 获取URLConnection对象对应的输出流
-            out = new PrintWriter(conn.getOutputStream());
+            out = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
             // 发送请求参数
-            out.print(param);
+            out.write(param);
             // flush输出流的缓冲
             out.flush();
             // 定义BufferedReader输入流来读取URL的响应

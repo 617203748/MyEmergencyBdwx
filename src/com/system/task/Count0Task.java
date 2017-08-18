@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,13 +35,13 @@ public class Count0Task {
     public void taskCycle() {
         System.out.println("当前时间：" + Util_Date.getCurrentDateTime());
 
-        getCommonds();
+//        getCommonds();
 
 //        changePostion();
 //
 //        sendPostions();
 //
-//        sendMsgs();
+        sendMsgs();
     }
 
     private void getCommonds() {
@@ -149,18 +150,21 @@ public class Count0Task {
             final List<Dev_msg> msgs = mybatisService.getDevMsg(param);
             if (msgs != null) {
                 // 上传终端位置信息
+
                 HttpRequest.sendPost(UrlPath.handleSaveMsg, "json=" + JSON.toJSONString(msgs), new IRequestCallBack() {
                     @Override
                     public void onSuccess(String result) {
-                        JSONObject jsonObject = JSONObject.parseObject(result);
-                        if ("success".equals(jsonObject.getString("code"))) {
-                            for (int i = 0; i < msgs.size(); i++) {
 
-                                mybatisService.changeStatus_DevMsg(msgs.get(i));
 
-                                System.out.println("    3.修改聊天状态成功：" + msgs.get(i).getMsg_id());
-                            }
-                        }
+//                        JSONObject jsonObject = JSONObject.parseObject(result);
+//                        if ("success".equals(jsonObject.getString("code"))) {
+//                            for (int i = 0; i < msgs.size(); i++) {
+//
+//                                mybatisService.changeStatus_DevMsg(msgs.get(i));
+//
+//                                System.out.println("    3.修改聊天状态成功：" + msgs.get(i).getMsg_id());
+//                            }
+//                        }
                     }
                 });
             }
