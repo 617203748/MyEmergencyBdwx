@@ -16,7 +16,7 @@ public class Dev_position {
     private Date pos_time;
     private String sim_no;
     private int sim_id;
-    private int is_changed;
+    private int is_change;
     private int is_commit;
 
     public int getPos_id() {
@@ -123,11 +123,11 @@ public class Dev_position {
         this.is_commit = is_commit;
     }
 
-    public int getIs_changed() {
-        return is_changed;
+    public int getIs_change() {
+        return is_change;
     }
 
-    public void setIs_changed(int is_changed) {
-        this.is_changed = is_changed;
+    public void setIs_change(int is_change) {
+        this.is_change = is_change;
     }
 }
