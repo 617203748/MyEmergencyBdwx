@@ -36,11 +36,53 @@ public class Count0Task {
 
         getCommonds();
 
-        changePostion();
+//        changePostion();
+//
+//        sendPostions();
+//
+//        sendMsgs();
+    }
 
-        sendPostions();
+    private void getCommonds() {
+        System.out.println("    1.getCommonds:" + UrlPath.getBds_bdcommand);
+        try {
+            HttpRequest.sendPost(UrlPath.getBds_bdcommand, "", new IRequestCallBack() {
+                @Override
+                public void onSuccess(String result) {
 
-        sendMsgs();
+                    System.out.println("    getBds_bdcommand result:" + result);
+
+                    //返回整体
+                    JSONObject jsonObject = JSONObject.parseObject(result);
+
+                    if (jsonObject.getInteger("errCode") == 0) {
+                        JSONArray jsonArray = jsonObject.getJSONArray("data");
+                        // 在这里将需要执行的命令插入数据库
+
+                        System.out.println("    1.命令：" + jsonArray.toJSONString());
+
+                        for (int i = 0; i < jsonArray.size(); i++) {
+                            HashMap<String, Object> param = new HashMap<String, Object>();
+                            param.put("BDC_FSZH", jsonArray.getJSONObject(i).getString("BDC_FSZH"));
+                            param.put("BDC_JSZH", jsonArray.getJSONObject(i).getString("BDC_JSZH"));
+                            param.put("BDC_TXNR", jsonArray.getJSONObject(i).getString("BDC_TXNR"));
+                            param.put("BDC_MLLX", jsonArray.getJSONObject(i).getString("BDC_MLLX"));
+                            param.put("BDC_FSLX", jsonArray.getJSONObject(i).getString("BDC_FSLX"));
+                            param.put("BDC_TXBM", jsonArray.getJSONObject(i).getString("BDC_TXBM"));
+                            param.put("BDC_SFTB", jsonArray.getJSONObject(i).getString("BDC_SFTB"));
+                            param.put("BDC_FSBZ", jsonArray.getJSONObject(i).getString("BDC_FSBZ"));
+
+                            mybatisService.makeCommond(param);
+                            System.out.println("    1.命令插入数据库成功");
+                        }
+                    } else {
+                        System.out.println("errMsg:" + jsonObject.getString("errMsg"));
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void changePostion() {
@@ -65,46 +107,13 @@ public class Count0Task {
                         for (int i = 0; i < jsonArray.size(); i++) {
                             position_unchange.get(i).setLatitude(jsonArray.getJSONObject(i).getString("y"));
                             position_unchange.get(i).setLongitude(jsonArray.getJSONObject(i).getString("x"));
-                            position_unchange.get(i).setIs_change(1);
+                            position_unchange.get(i).setIs_changed(1);
 
                             mybatisService.changePostion(position_unchange.get(i));
                         }
                     }
                 });
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void getCommonds() {
-        System.out.println("    1.getCommonds:" + UrlPath.getBds_bdcommand);
-        try {
-            HttpRequest.sendPost(UrlPath.getBds_bdcommand, "", new IRequestCallBack() {
-                @Override
-                public void onSuccess(String result) {
-                    JSONObject jsonObject = JSONObject.parseObject(result);
-                    JSONArray jsonArray = jsonObject.getJSONArray("data");
-                    // 在这里将需要执行的命令插入数据库
-
-                    System.out.println("    1.命令：" + jsonArray.toJSONString());
-
-                    for (int i = 0; i < jsonArray.size(); i++) {
-                        HashMap<String, Object> param = new HashMap<String, Object>();
-                        param.put("BDC_FSZH", jsonArray.getJSONObject(i).getString("BDC_FSZH"));
-                        param.put("BDC_JSZH", jsonArray.getJSONObject(i).getString("BDC_JSZH"));
-                        param.put("BDC_TXNR", jsonArray.getJSONObject(i).getString("BDC_TXNR"));
-                        param.put("BDC_MLLX", jsonArray.getJSONObject(i).getString("BDC_MLLX"));
-                        param.put("BDC_FSLX", jsonArray.getJSONObject(i).getString("BDC_FSLX"));
-                        param.put("BDC_TXBM", jsonArray.getJSONObject(i).getString("BDC_TXBM"));
-                        param.put("BDC_SFTB", jsonArray.getJSONObject(i).getString("BDC_SFTB"));
-                        param.put("BDC_FSBZ", jsonArray.getJSONObject(i).getString("BDC_FSBZ"));
-
-                        mybatisService.makeCommond(param);
-                        System.out.println("    1.命令插入数据库成功");
-                    }
-                }
-            });
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -8,17 +8,17 @@
         SELECT
         *
         FROM dev_position WHERE is_commit = 0 AND
-        is_change = 1
+        is_changed = 1
     </select>
 
     <select id="getDevPostion_unchange" parameterType="HashMap"
             resultType="Dev_position">
-        SELECT * FROM dev_position WHERE is_change = 0
+        SELECT * FROM dev_position WHERE is_changed = 0
     </select>
 
     <update id="changePostion" parameterType="Dev_position">
         UPDATE dev_position SET
-        is_change = 1,longitude = #{longitude},latitude =#{latitude} WHERE
+        is_changed = 1,longitude = #{longitude},latitude =#{latitude} WHERE
         pos_id = #{pos_id}
     </update>
 
