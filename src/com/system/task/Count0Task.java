@@ -90,12 +90,12 @@ public class Count0Task {
     public void changePostion() {
         try {
             HashMap<String, Object> param = new HashMap<String, Object>();
-            final List<Dev_position> position_unchange = mybatisService.getDevPostion_unchange(param);
+            final List<Dev_position> list = mybatisService.getDevPostion_unchange(param);
             String coords = "";
-            if (position_unchange != null && position_unchange.size() > 0) {
+            if (list != null && list.size() > 0) {
 
-                for (int i = 0; i < position_unchange.size(); i++) {
-                    String item = position_unchange.get(i).getLongitude() + "," + position_unchange.get(i).getLatitude() + ";";
+                for (int i = 0; i < list.size(); i++) {
+                    String item = list.get(i).getLongitude() + "," + list.get(i).getLatitude() + ";";
                     coords = coords + item;
                 }
 
@@ -108,11 +108,11 @@ public class Count0Task {
                         JSONObject json = JSONObject.parseObject(result);
                         JSONArray jsonArray = json.getJSONArray("result");
                         for (int i = 0; i < jsonArray.size(); i++) {
-                            position_unchange.get(i).setLatitude(jsonArray.getJSONObject(i).getString("y"));
-                            position_unchange.get(i).setLongitude(jsonArray.getJSONObject(i).getString("x"));
-                            position_unchange.get(i).setIs_changed(1);
+                            list.get(i).setLatitude(jsonArray.getJSONObject(i).getString("y"));
+                            list.get(i).setLongitude(jsonArray.getJSONObject(i).getString("x"));
+                            list.get(i).setIs_changed(1);
 
-                            mybatisService.changePostion(position_unchange.get(i));
+                            mybatisService.changePostion(list.get(i));
                             System.out.println("    changePostion result:转换位置信息");
                         }
 
@@ -162,7 +162,8 @@ public class Count0Task {
         try {
             HashMap<String, Object> param = new HashMap<String, Object>();
             final List<Dev_msg> msgs = mybatisService.getDevMsg(param);
-            if (msgs != null) {
+
+            if (msgs != null && msgs.size() > 0) {
                 // 上传终端位置信息
 
                 HttpRequest.sendPost(UrlPath.handleSaveMsg, "json=" + JSON.toJSONString(msgs), new IRequestCallBack() {
