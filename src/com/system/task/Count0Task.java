@@ -35,10 +35,10 @@ public class Count0Task {
     public void taskCycle() {
         System.out.println("当前时间：" + Util_Date.getCurrentDateTime());
 
-//        getCommonds();
+        getCommonds();
 
-//        changePostion();
-//
+        changePostion();
+
         sendPostions();
 
         sendMsgs();
@@ -101,6 +101,7 @@ public class Count0Task {
                 HttpRequest.sendPost("http://api.map.baidu.com/geoconv/v1/", params, new IRequestCallBack() {
                     @Override
                     public void onSuccess(String result) {
+                        System.out.println("    changePostion:" + result);
                         JSONObject json = JSONObject.parseObject(result);
                         JSONArray jsonArray = json.getJSONArray("result");
                         for (int i = 0; i < jsonArray.size(); i++) {
