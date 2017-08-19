@@ -110,6 +110,7 @@ public class Count0Task {
                             position_unchange.get(i).setIs_changed(1);
 
                             mybatisService.changePostion(position_unchange.get(i));
+                            System.out.println("    changePostion result:转换位置信息");
                         }
                     }
                 });
