@@ -13,7 +13,7 @@ public class Dev_position {
     private String altitude;
     private int pos_prec;
     private int fast_flag;
-    private Date pos_time;
+    private String pos_time;
     private String sim_no;
     private int sim_id;
     private int is_changed;
@@ -91,11 +91,11 @@ public class Dev_position {
         this.fast_flag = fast_flag;
     }
 
-    public Date getPos_time() {
+    public String getPos_time() {
         return pos_time;
     }
 
-    public void setPos_time(Date pos_time) {
+    public void setPos_time(String pos_time) {
         this.pos_time = pos_time;
     }
 

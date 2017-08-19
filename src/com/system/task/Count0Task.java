@@ -39,8 +39,8 @@ public class Count0Task {
 
 //        changePostion();
 //
-//        sendPostions();
-//
+        sendPostions();
+
         sendMsgs();
     }
 
@@ -128,13 +128,20 @@ public class Count0Task {
                 HttpRequest.sendPost(UrlPath.handleSavePosition, "json=" + JSON.toJSONString(positions_changed), new IRequestCallBack() {
                     @Override
                     public void onSuccess(String result) {
+
+                        System.out.println("    2.sendPostions result:" + result);
+
                         JSONObject jsonObject = JSONObject.parseObject(result);
-                        if ("success".equals(jsonObject.getString("code"))) {
+
+                        if (jsonObject.getInteger("errCode") == 0) {
                             for (int i = 0; i < positions_changed.size(); i++) {
                                 mybatisService.changeStatus_DevPostion(positions_changed.get(i));
                                 System.out.println("    2.修改位置信息状态成功：" + positions_changed.get(i).getPos_id());
                             }
+                        } else {
+                            System.out.println("    errMsg:" + jsonObject.getString("errMsg"));
                         }
+
                     }
                 });
             }
@@ -154,17 +161,20 @@ public class Count0Task {
                 HttpRequest.sendPost(UrlPath.handleSaveMsg, "json=" + JSON.toJSONString(msgs), new IRequestCallBack() {
                     @Override
                     public void onSuccess(String result) {
+                        System.out.println("    3.sendMsgs result:" + result);
 
+                        JSONObject jsonObject = JSONObject.parseObject(result);
 
-//                        JSONObject jsonObject = JSONObject.parseObject(result);
-//                        if ("success".equals(jsonObject.getString("code"))) {
-//                            for (int i = 0; i < msgs.size(); i++) {
-//
-//                                mybatisService.changeStatus_DevMsg(msgs.get(i));
-//
-//                                System.out.println("    3.修改聊天状态成功：" + msgs.get(i).getMsg_id());
-//                            }
-//                        }
+                        if (jsonObject.getInteger("errCode") == 0) {
+                            for (int i = 0; i < msgs.size(); i++) {
+
+                                mybatisService.changeStatus_DevMsg(msgs.get(i));
+
+                                System.out.println("    3.修改聊天状态成功：" + msgs.get(i).getMsg_id());
+                            }
+                        } else {
+                            System.out.println("    errMsg:" + jsonObject.getString("errMsg"));
+                        }
                     }
                 });
             }
