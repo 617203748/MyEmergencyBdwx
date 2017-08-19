@@ -33,36 +33,36 @@ public class Count0Task {
     @Scheduled(cron = "10 * * * * *")
     // 间隔5秒执行
     public void taskCycle() {
+        System.out.println();
         System.out.println("当前时间：" + Util_Date.getCurrentDateTime());
 
         //获取通信命令
         getCommonds();
 
+        //提交文本信息
+        sendMsgs();
+
         //转换位置信息后提交位置信息
         changePostion();
 
-        //sendPostions();
-
-        //提交文本信息
-        sendMsgs();
+        //上传位置
+        sendPostions();
     }
 
+    //1
     private void getCommonds() {
         System.out.println("    1.getCommonds:" + UrlPath.getBds_bdcommand);
         try {
             HttpRequest.sendPost(UrlPath.getBds_bdcommand, "", new IRequestCallBack() {
                 @Override
                 public void onSuccess(String result) {
+                    System.out.println("        1.result:" + result);
 
                     //返回整体
                     JSONObject jsonObject = JSONObject.parseObject(result);
 
                     if (jsonObject.getInteger("errCode") == 0) {
                         JSONArray jsonArray = jsonObject.getJSONArray("data");
-                        // 在这里将需要执行的命令插入数据库
-
-                        System.out.println("    1.命令：" + jsonArray.toJSONString());
-
                         for (int i = 0; i < jsonArray.size(); i++) {
                             HashMap<String, Object> param = new HashMap<String, Object>();
                             param.put("BDC_FSZH", jsonArray.getJSONObject(i).getString("BDC_FSZH"));
@@ -75,10 +75,7 @@ public class Count0Task {
                             param.put("BDC_FSBZ", jsonArray.getJSONObject(i).getString("BDC_FSBZ"));
 
                             mybatisService.makeCommond(param);
-                            System.out.println("    1.命令插入数据库成功");
                         }
-                    } else {
-                        System.out.println("    errMsg:" + jsonObject.getString("errMsg"));
                     }
                 }
             });
@@ -87,11 +84,41 @@ public class Count0Task {
         }
     }
 
+    //2
+    public void sendMsgs() {
+        try {
+            HashMap<String, Object> param = new HashMap<String, Object>();
+            final List<Dev_msg> msgs = mybatisService.getDevMsg(param);
+            System.out.println("    2.sendMsgs:" + JSON.toJSONString(msgs));
+            if (msgs != null && msgs.size() > 0) {
+                // 上传终端位置信息
+
+                HttpRequest.sendPost(UrlPath.handleSaveMsg, "json=" + JSON.toJSONString(msgs), new IRequestCallBack() {
+                    @Override
+                    public void onSuccess(String result) {
+                        System.out.println("        2.result:" + result);
+
+                        JSONObject jsonObject = JSONObject.parseObject(result);
+
+                        if (jsonObject.getInteger("errCode") == 0) {
+                            for (int i = 0; i < msgs.size(); i++) {
+                                mybatisService.changeStatus_DevMsg(msgs.get(i));
+                            }
+                        }
+                    }
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //3
     public void changePostion() {
         try {
             HashMap<String, Object> param = new HashMap<String, Object>();
             final List<Dev_position> list = mybatisService.getDevPostion_unchange(param);
-            System.out.println("    2.changePostion 处理条数：" + list.size());
+            System.out.println("    3.changePostion:" + JSON.toJSONString(list));
             String coords = "";
             if (list != null && list.size() > 0) {
 
@@ -105,7 +132,8 @@ public class Count0Task {
                 HttpRequest.sendPost("http://api.map.baidu.com/geoconv/v1/", params, new IRequestCallBack() {
                     @Override
                     public void onSuccess(String result) {
-                        System.out.println("    changePostion:" + result);
+                        System.out.println("        3.result:" + result);
+
                         JSONObject json = JSONObject.parseObject(result);
                         JSONArray jsonArray = json.getJSONArray("result");
                         for (int i = 0; i < jsonArray.size(); i++) {
@@ -114,10 +142,7 @@ public class Count0Task {
                             list.get(i).setIs_changed(1);
 
                             mybatisService.changePostion(list.get(i));
-                            System.out.println("    changePostion result:转换位置信息");
                         }
-
-                        sendPostions();
                     }
                 });
             }
@@ -127,61 +152,23 @@ public class Count0Task {
     }
 
     public void sendPostions() {
-        System.out.println("    2.sendPostions");
         try {
             HashMap<String, Object> param = new HashMap<String, Object>();
             final List<Dev_position> positions_changed = mybatisService.getDevPostion_changed(param);
-            if (positions_changed != null) {
+            System.out.println("    4.sendPostions:" + JSON.toJSONString(positions_changed));
+            if (positions_changed != null && positions_changed.size() > 0) {
                 // 上传终端位置信息
                 HttpRequest.sendPost(UrlPath.handleSavePosition, "json=" + JSON.toJSONString(positions_changed), new IRequestCallBack() {
                     @Override
                     public void onSuccess(String result) {
-
-                        System.out.println("    2.sendPostions result:" + result);
+                        System.out.println("        4.result:" + result);
 
                         JSONObject jsonObject = JSONObject.parseObject(result);
 
                         if (jsonObject.getInteger("errCode") == 0) {
                             for (int i = 0; i < positions_changed.size(); i++) {
                                 mybatisService.changeStatus_DevPostion(positions_changed.get(i));
-                                System.out.println("    2.位置上传成功 修改dev_position is_commit：" + positions_changed.get(i).getPos_id());
                             }
-                        } else {
-                            System.out.println("    2.errMsg:" + jsonObject.getString("errMsg"));
-                        }
-
-                    }
-                });
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void sendMsgs() {
-        try {
-            HashMap<String, Object> param = new HashMap<String, Object>();
-            final List<Dev_msg> msgs = mybatisService.getDevMsg(param);
-            System.out.println("    3.sendMsgs 处理条数：" + msgs.size());
-            if (msgs != null && msgs.size() > 0) {
-                // 上传终端位置信息
-
-                HttpRequest.sendPost(UrlPath.handleSaveMsg, "json=" + JSON.toJSONString(msgs), new IRequestCallBack() {
-                    @Override
-                    public void onSuccess(String result) {
-                        System.out.println("    3.sendMsgs result:" + result);
-
-                        JSONObject jsonObject = JSONObject.parseObject(result);
-
-                        if (jsonObject.getInteger("errCode") == 0) {
-                            for (int i = 0; i < msgs.size(); i++) {
-
-                                mybatisService.changeStatus_DevMsg(msgs.get(i));
-
-                                System.out.println("    3.文本上传成功 修改dev_msg is_commit：" + msgs.get(i).getMsg_id());
-                            }
-                        } else {
-                            System.out.println("    3.errMsg:" + jsonObject.getString("errMsg"));
                         }
                     }
                 });
