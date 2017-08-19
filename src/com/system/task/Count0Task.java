@@ -91,6 +91,7 @@ public class Count0Task {
         try {
             HashMap<String, Object> param = new HashMap<String, Object>();
             final List<Dev_position> list = mybatisService.getDevPostion_unchange(param);
+            System.out.println("    2.changePostion 处理条数：" + list.size());
             String coords = "";
             if (list != null && list.size() > 0) {
 
@@ -143,10 +144,10 @@ public class Count0Task {
                         if (jsonObject.getInteger("errCode") == 0) {
                             for (int i = 0; i < positions_changed.size(); i++) {
                                 mybatisService.changeStatus_DevPostion(positions_changed.get(i));
-                                System.out.println("    2.修改位置信息状态成功：" + positions_changed.get(i).getPos_id());
+                                System.out.println("    2.位置上传成功 修改dev_position is_commit：" + positions_changed.get(i).getPos_id());
                             }
                         } else {
-                            System.out.println("    errMsg:" + jsonObject.getString("errMsg"));
+                            System.out.println("    2.errMsg:" + jsonObject.getString("errMsg"));
                         }
 
                     }
@@ -158,11 +159,10 @@ public class Count0Task {
     }
 
     public void sendMsgs() {
-        System.out.println("    3.sendMsgs");
         try {
             HashMap<String, Object> param = new HashMap<String, Object>();
             final List<Dev_msg> msgs = mybatisService.getDevMsg(param);
-
+            System.out.println("    3.sendMsgs 处理条数：" + msgs.size());
             if (msgs != null && msgs.size() > 0) {
                 // 上传终端位置信息
 
@@ -178,10 +178,10 @@ public class Count0Task {
 
                                 mybatisService.changeStatus_DevMsg(msgs.get(i));
 
-                                System.out.println("    3.修改聊天状态成功：" + msgs.get(i).getMsg_id());
+                                System.out.println("    3.文本上传成功 修改dev_msg is_commit：" + msgs.get(i).getMsg_id());
                             }
                         } else {
-                            System.out.println("    errMsg:" + jsonObject.getString("errMsg"));
+                            System.out.println("    3.errMsg:" + jsonObject.getString("errMsg"));
                         }
                     }
                 });
