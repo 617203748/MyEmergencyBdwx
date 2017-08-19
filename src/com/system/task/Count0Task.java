@@ -35,12 +35,15 @@ public class Count0Task {
     public void taskCycle() {
         System.out.println("当前时间：" + Util_Date.getCurrentDateTime());
 
+        //获取通信命令
         getCommonds();
 
+        //转换位置信息后提交位置信息
         changePostion();
 
-        sendPostions();
+        //sendPostions();
 
+        //提交文本信息
         sendMsgs();
     }
 
@@ -112,6 +115,8 @@ public class Count0Task {
                             mybatisService.changePostion(position_unchange.get(i));
                             System.out.println("    changePostion result:转换位置信息");
                         }
+
+                        sendPostions();
                     }
                 });
             }
