@@ -4,9 +4,9 @@ public class UrlPath {
 
     // public static final String ip = "115.28.32.71";
     // public static final String ip = "192.168.0.112";
-    // public static final String ip = "yj.sxbdjw.com";
+    public static final String ip = "api.eme.sxbdjw.cn";
 
-    public static final String ApiPhp = "http://123.57.1.2:1234/app_bdwx/index.php?";
+    public static final String ApiPhp = "http://" + ip + "/app_bdwx/index.php?";
 
     public static final String handleSavePosition = ApiPhp + "act=app&m=handleSavePosition";
 
